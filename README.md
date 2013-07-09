@@ -36,7 +36,9 @@ FOR DEVELOPERS
 
 After checking out the source, run:
 
-  $ rake newb
+```
+$ rake newb
+```
 
 This task will install any missing dependencies, run the tests/specs,
 and generate the RDoc.
