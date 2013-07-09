@@ -55,7 +55,7 @@ class Bio::Db::Vcf
     rule(:integer)    { match('[0-9]').repeat(1).as(:int) }
 
     rule(:id) {
-      match['0-9a-zA-Z_'].repeat(1)
+      match['0-9a-zA-Z_\.'].repeat(1)
     }
 
     rule(:not_newline) {
@@ -78,9 +78,13 @@ class Bio::Db::Vcf
       str("String")
     }
 
+    rule(:number) {
+      integer | match("[.AG]")
+    }
+
     rule(:info) {
       # ##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
-      str('##INFO=<ID=') >> id.as(:id) >> str(',Number=') >> (integer | str(".")).as(:number) >> str(',Type=') >> info_type.as(:type) >> str(',Description=') >> string.as(:description) >> str(">") >> newline_or_eof
+      str('##INFO=<ID=') >> id.as(:id) >> str(',Number=') >> number.as(:number) >> str(',Type=') >> info_type.as(:type) >> str(',Description=') >> string.as(:description) >> str(">") >> newline_or_eof
     }
 
     rule(:filter) {
@@ -90,7 +94,7 @@ class Bio::Db::Vcf
 
     rule(:format) {
       # ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
-      str('##FORMAT=<ID=') >> id.as(:id) >> str(',Number=') >> (integer | str(".")).as(:number) >> str(',Type=') >> info_type.as(:type) >> str(',Description=') >> string.as(:description) >> str(">") >> newline_or_eof
+      str('##FORMAT=<ID=') >> id.as(:id) >> str(',Number=') >> number.as(:number) >> str(',Type=') >> info_type.as(:type) >> str(',Description=') >> string.as(:description) >> str(">") >> newline_or_eof
     }
 
     rule(:header_line) {
@@ -146,7 +150,7 @@ class Bio::Db::Vcf
   def initialize(s)
     @h = nil
     @s = s.split("\t")
-  end
+ end
 
   def reheader!(h)
     @h = h
@@ -160,7 +164,7 @@ class Bio::Db::Vcf
     @filter = @s[6].split(";")
     @info = Hash.new
     CSV.parse_line(@s[7], :col_sep => ";").each do |i|
-      i =~ /([0-9a-zA-Z_]+)=?(.*)$/
+      i =~ /([0-9a-zA-Z_\.]+)=?(.*)$/
       @info[$1] = format_value(@h.info[$1], $2)
     end
 
@@ -176,7 +180,7 @@ class Bio::Db::Vcf
           #
           # Special handling
           if f == "GT"
-            v = v.split(/[|\/]/).map { |u| allele_by_id(Integer(u)) }
+            v = v.split(/[|\/]/).map { |u| u == "." ? "." : allele_by_id(Integer(u)) }
           end
 
           @genotypes[sample][f] = v

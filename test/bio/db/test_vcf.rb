@@ -103,6 +103,13 @@ EXAMPLE_VCF = %Q{##fileformat=VCFv4.0
     assert_equal "NA00001", r[:samples][0][:sample]
     assert_equal "NA00002", r[:samples][1][:sample]
     assert_equal "NA00003", r[:samples][2][:sample]
+
+    s = %{##INFO=<ID=CASE.set,Number=1,Type=String,Description="Source VCF for the merged record in CombineVariants">}
+    r = parser.info.parse(s)
+    assert_equal "CASE.set", r[:id]
+    assert_equal "String", r[:type]
+    assert_equal "Source VCF for the merged record in CombineVariants", r[:description][:string]
+    assert_equal "1", r[:number][:int]
   end
 
   def test_header_transformer
@@ -119,5 +126,9 @@ EXAMPLE_VCF = %Q{##fileformat=VCFv4.0
     assert_equal 6, h.info.size
     assert_equal 4, h.format.size
     assert_equal 2, h.filter.size
+  end
+
+  def test_hard
+    e = Bio::FlatFile.new(Bio::Db::Vcf, File.open("test/test.vcf")).next_entry
   end
 end
