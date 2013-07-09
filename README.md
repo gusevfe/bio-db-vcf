@@ -3,12 +3,20 @@
 
 == DESCRIPTION:
 
+Easy parsing of Variant Call Format (VCF)
 
 == FEATURES/PROBLEMS:
 
+* Works with format versions 4.1 and 4.0
+* Support for earlier versions is not tested
 
 == SYNOPSIS:
 
+    require 'bio'
+    require 'bio/db/vcf'
+
+    Bio::FlatFile.open(Bio::Db::Vcf, "example.vcf").each_entry do |e|
+    end
 
 == REQUIREMENTS:
 
@@ -29,7 +37,7 @@ and generate the RDoc.
 
 (The MIT License)
 
-Copyright (c) 2013 FIX
+Copyright (c) 2013 Fedor Gusev
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
