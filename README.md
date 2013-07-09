@@ -26,7 +26,9 @@ end
 REQUIREMENTS
 ------------
 
-* `bio` gem
+The following gems are needed
+* bio
+* parslet
 
 INSTALL
 -------
