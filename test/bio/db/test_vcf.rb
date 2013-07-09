@@ -129,6 +129,6 @@ EXAMPLE_VCF = %Q{##fileformat=VCFv4.0
   end
 
   def test_hard
-    e = Bio::FlatFile.new(Bio::Db::Vcf, File.open("test/test.vcf")).next_entry
+    e = Bio::FlatFile.open(Bio::Db::Vcf, "test/test.vcf").next_entry
   end
 end
