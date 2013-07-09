@@ -15,11 +15,13 @@ FEATURES/PROBLEMS
 SYNOPSIS
 --------
 
-    require 'bio'
-    require 'bio/db/vcf'
+```ruby
+require 'bio'
+require 'bio/db/vcf'
 
-    Bio::FlatFile.open(Bio::Db::Vcf, "example.vcf").each_entry do |e|
-    end
+Bio::FlatFile.open(Bio::Db::Vcf, "example.vcf").each_entry do |e|
+end
+```
 
 REQUIREMENTS
 ------------
