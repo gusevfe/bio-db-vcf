@@ -62,8 +62,12 @@ class Bio::Db::Vcf
       match('[^\n]').repeat(1)
     }
 
+    rule(:newline_or_eof) {
+      str("\n") | any.absent?
+    }
+
     rule(:meta) {
-      str('##') >> id.as(:key) >> str('=') >> not_newline.as(:value) >> str("\n")
+      str('##') >> id.as(:key) >> str('=') >> not_newline.as(:value) >> newline_or_eof
     }
 
     rule(:info_type) {
@@ -76,21 +80,21 @@ class Bio::Db::Vcf
 
     rule(:info) {
       # ##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
-      str('##INFO=<ID=') >> id.as(:id) >> str(',Number=') >> (integer | str(".")).as(:number) >> str(',Type=') >> info_type.as(:type) >> str(',Description=') >> string.as(:description) >> str(">\n")
+      str('##INFO=<ID=') >> id.as(:id) >> str(',Number=') >> (integer | str(".")).as(:number) >> str(',Type=') >> info_type.as(:type) >> str(',Description=') >> string.as(:description) >> str(">") >> newline_or_eof
     }
 
     rule(:filter) {
       # ##FILTER=<ID=ID,Description=”description”>
-      str('##FILTER=<ID=') >> id.as(:id) >> str(',Description=') >> string.as(:description) >> str(">\n")
+      str('##FILTER=<ID=') >> id.as(:id) >> str(',Description=') >> string.as(:description) >> str(">") >> newline_or_eof
     }
 
     rule(:format) {
       # ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
-      str('##FORMAT=<ID=') >> id.as(:id) >> str(',Number=') >> (integer | str(".")).as(:number) >> str(',Type=') >> info_type.as(:type) >> str(',Description=') >> string.as(:description) >> str(">\n")
+      str('##FORMAT=<ID=') >> id.as(:id) >> str(',Number=') >> (integer | str(".")).as(:number) >> str(',Type=') >> info_type.as(:type) >> str(',Description=') >> string.as(:description) >> str(">") >> newline_or_eof
     }
 
     rule(:header_line) {
-      str("#") >> str(%w{CHROM POS     ID        REF    ALT     QUAL FILTER INFO} * "\t") >> (str("\tFORMAT") >> (str("\t") >> id.as(:sample)).repeat(1)).maybe.as(:samples) >> str("\n")
+      str("#") >> str(%w{CHROM POS     ID        REF    ALT     QUAL FILTER INFO} * "\t") >> (str("\tFORMAT") >> (str("\t") >> id.as(:sample)).repeat(1)).maybe.as(:samples) >> newline_or_eof
     }
 
     rule(:header) {
@@ -115,6 +119,7 @@ class Bio::Db::Vcf
       # Read in the header
       while true
         s = bstream.gets
+        break unless s
         if s[0] == '#'
           @h.concat s
         else
