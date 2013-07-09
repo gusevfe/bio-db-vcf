@@ -41,7 +41,8 @@ After checking out the source, run:
 This task will install any missing dependencies, run the tests/specs,
 and generate the RDoc.
 
-== LICENSE:
+LICENSE
+-------
 
 (The MIT License)
 
