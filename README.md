@@ -1,16 +1,19 @@
-= bio-db-vcf
+bio-db-vcf
+----------
 
-
-== DESCRIPTION:
+DESCRIPTION
+-----------
 
 Easy parsing of Variant Call Format (VCF)
 
-== FEATURES/PROBLEMS:
+FEATURES/PROBLEMS
+-----------------
 
 * Works with format versions 4.1 and 4.0
 * Support for earlier versions is not tested
 
-== SYNOPSIS:
+SYNOPSIS
+--------
 
     require 'bio'
     require 'bio/db/vcf'
@@ -18,13 +21,16 @@ Easy parsing of Variant Call Format (VCF)
     Bio::FlatFile.open(Bio::Db::Vcf, "example.vcf").each_entry do |e|
     end
 
-== REQUIREMENTS:
+REQUIREMENTS
+------------
 
+* `bio` gem
 
-== INSTALL:
+INSTALL
+-------
 
-
-== DEVELOPERS:
+FOR DEVELOPERS
+--------------
 
 After checking out the source, run:
 
