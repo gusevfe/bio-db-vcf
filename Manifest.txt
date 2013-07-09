@@ -1,0 +1,7 @@
+.autotest
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+lib/bio/db/vcf.rb
+test/bio/db/test_vcf.rb
