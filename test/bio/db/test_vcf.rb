@@ -131,4 +131,13 @@ EXAMPLE_VCF = %Q{##fileformat=VCFv4.0
   def test_hard
     e = Bio::FlatFile.open(Bio::Db::Vcf, "test/test.vcf").next_entry
   end
+
+  def test_1000genomes_count
+    count = 0
+    Bio::FlatFile.open(Bio::Db::Vcf, "test/1000genomes.chr1.upto_100k.vcf").each_entry do |e|
+      count += 1
+    end
+
+    assert_equal 166, count
+  end
 end

@@ -160,7 +160,7 @@ class Bio::Db::Vcf
     @id = @s[2].split(";")
     @ref = @s[3]
     @alt = @s[4].split(",")
-    @qual = Float(@s[5])
+    @qual = (@s[5] == "." ? "." : Float(@s[5]))
     @filter = @s[6].split(";")
     @info = Hash.new
     CSV.parse_line(@s[7], :col_sep => ";").each do |i|
