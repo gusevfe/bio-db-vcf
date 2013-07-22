@@ -140,4 +140,13 @@ EXAMPLE_VCF = %Q{##fileformat=VCFv4.0
 
     assert_equal 166, count
   end
+
+  def test_DBSNP_count
+    count = 0
+    Bio::FlatFile.open(Bio::Db::Vcf, "test/DBSNP.chr1.upto_100k.vcf").each_entry do |e|
+      count += 1
+    end
+
+    assert_equal 482, count
+  end
 end

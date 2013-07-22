@@ -32,7 +32,7 @@ class Bio::Db::Vcf
       VcfHeaderTransformer.new.apply(r).each do |u|
         type, value = u.first
         if type == :samples
-          @samples = value
+          @samples = value unless value == nil
         elsif type == :meta
           @meta[value[:key]] = value[:value]
         elsif type == :info
