@@ -9,6 +9,10 @@ $log = Logger.new STDERR
 module Bio; end
 module Bio::Db; end
 
+def split_quoted(str, sep)
+    str.chomp.scan(/(?:"(?:\\.|[^"])*"|[^"#{sep}])+/)
+end
+
 class Bio::Db::Vcf
   VERSION = "1.0.0"
 
@@ -163,18 +167,18 @@ class Bio::Db::Vcf
     @qual = (@s[5] == "." ? "." : Float(@s[5]))
     @filter = @s[6].split(";")
     @info = Hash.new
-    @s[7].scan(/(?:"(?:\\.|[^"])*"|[^";])+/).each do |i|
+    split_quoted(@s[7], ";").each do |i|
       i =~ /([0-9a-zA-Z_\.]+)=?(.*)$/
       @info[$1] = format_value(@h.info[$1], $2)
     end
 
     @genotypes = Hash.new
     unless @h.samples.empty?
-      @format = @s[8].scan(/(?:"(?:\\.|[^"])*"|[^":])+/)
+      @format = split_quoted(@s[8], ":")
 
       @h.samples.each_with_index do |sample, i|
         @genotypes[sample] = Hash.new
-        @s[9 + i].scan(/(?:"(?:\\.|[^"])*"|[^":])+/).each_with_index do |v, i|
+        split_quoted(@s[9 + i], ":").each_with_index do |v, i|
           f = @format[i]
           v = format_value(@h.format[f], v)
           #
@@ -195,7 +199,7 @@ class Bio::Db::Vcf
     elsif u[:number] == 0
       return format_single_value(u[:type], nil)
     else
-      v.chomp.scan(/(?:"(?:\\.|[^"])*"|[^",])+/).map do |v|
+      split_quoted(v, ",").map do |v|
         format_single_value(u[:type], v)
       end
     end
